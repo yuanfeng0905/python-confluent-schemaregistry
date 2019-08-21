@@ -4,9 +4,12 @@ import urllib2
 import json
 import sys
 import hashlib
+import logging
 
 from . import ClientError, VALID_LEVELS
 from ..serializers import Util
+
+LOGGER = logging.getLogger(__name__)
 
 # Common accept header sent
 ACCEPT_HDR="application/vnd.schemaregistry.v1+json, application/vnd.schemaregistry+json, application/json"
@@ -108,6 +111,7 @@ class CachedSchemaRegistryClient(object):
         """
         # 计算schema hash
         avro_schema_hash = self._hash(avro_schema)
+        LOGGER.info('[avro register] subject={}, hash={}'.format(subject, avro_schema_hash))
         schemas_to_id = self.subject_to_schema_ids.get(subject, { })
         schema_id = schemas_to_id.get(avro_schema_hash, -1)
         if schema_id != -1:
