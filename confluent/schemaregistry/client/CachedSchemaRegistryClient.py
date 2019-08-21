@@ -115,8 +115,10 @@ class CachedSchemaRegistryClient(object):
         schemas_to_id = self.subject_to_schema_ids.get(subject, { })
         schema_id = schemas_to_id.get(avro_schema_hash, -1)
         if schema_id != -1:
+            LOGGER.info('[avro register] schema={}'.format(self.get_by_id(schema_id).to_json()))
             return schema_id
 
+        LOGGER.info('[avro register] schema={}'.format(avro_schema.to_json()))
         # send it up
         url = '/'.join([self.url,'subjects',subject,'versions'])
         # body is { schema : json_string }
